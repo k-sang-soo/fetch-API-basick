@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>WEB1 - Welcome</title>
+        <meta charset="utf-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+        <!-- 구형 브라우저를 위한 fetch polyfill -->
+        <script src=https://cdn.jsdelivr.net/npm/promise-polyfill@8.1/dist/polyfill.min.js></script>
+        <script src=https://cdn.jsdelivr.net/npm/whatwg-fetch@3.0/dist/fetch.umd.min.js></script>
+        <!-- 구형 브라우저를 위한 fetch polyfill -->
+
+        <script src="colors.js"></script>
+    </head>
+    <body>
+        <h1><a href="index.html">WEB</a></h1>
+        <input id="night_day" type="button" value="night" />
+        <ol id="nav"></ol>
+        <article></article>
+        <script>
+            function fetchPage(name) {
+                fetch(name).then(function (response) {
+                    response.text().then(function (text) {
+                        document.querySelector('article').innerHTML = text;
+                    });
+                });
+            }
+            if (location.hash) {
+                fetchPage(location.hash.substr(2));
+            } else {
+                fetchPage('welcome');
+            }
+
+            fetch('list').then(function (response) {
+                response.text().then(function (text) {
+                    var items = text.split(','); //,을 제외한 문자열들은 배열로 반환
+                    var i = 0;
+                    tags = '';
+                    while (i < items.length) {
+                        var item = items[i];
+                        item = item.trim(); //줄바꿈 없애주는 역할
+                        var tag = '<li><a href="#!' + item + '" onclick="fetchPage(\'' + item + '\')">' + item + '</a></li>';
+                        tags = tags + tag;
+                        i = i + 1;
+                    }
+                    document.querySelector('#nav').innerHTML = tags;
+                });
+            });
+        </script>
+    </body>
+</html>
